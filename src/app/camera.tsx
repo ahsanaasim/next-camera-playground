@@ -52,7 +52,7 @@ export default function Camera(props: {onclose: any, show: boolean}) {
                 { facingMode: "environment" }, 
                 {
                   fps: 10,    // Optional, frame per seconds for qr code scanning
-                  qrbox: qrboxFunction  // Optional, if you want bounded box UI
+                  qrbox: {width: 300, height: 180}  // Optional, if you want bounded box UI
                 },
                 (decodedText, decodedResult) => {
                   // do something when code is read
@@ -99,7 +99,7 @@ export default function Camera(props: {onclose: any, show: boolean}) {
   return (
     <div style={{}}>
         <Button onClick={closeDialog}>Close</Button>
-        <div style={{width: '366px', height:'274px'}}>
+        <div style={{width: '366px', height:'274px', overflow: 'hidden'}}>
             <div id="reader" style={{width: '366px', height:'274px'}}></div>
         </div>
     </div>
