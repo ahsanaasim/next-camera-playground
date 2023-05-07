@@ -1,7 +1,34 @@
+"use client";
 import Image from 'next/image'
 import styles from './page.module.css'
+import {Html5Qrcode} from "html5-qrcode";
+import {Html5QrcodeScanner} from "html5-qrcode";
+import { Drawer, DrawerProps, RadioChangeEvent } from 'antd';
+import { useState } from 'react';
+import Camera from './camera';
 
 export default function Home() {
+
+  const [open, setOpen] = useState(false);
+  const [scannedCode, setScannedCode] = useState("");
+  const [placement, setPlacement] = useState<DrawerProps['placement']>('bottom');
+
+  const showDrawer = () => {
+    setScannedCode("");
+    setOpen(true);
+  };
+
+  const onClose = (code: string) => {
+    setScannedCode(code);
+    setOpen(false);
+  };
+
+  const onChange = (e: RadioChangeEvent) => {
+    setPlacement(e.target.value);
+  };
+  
+
+  
   return (
     <main className={styles.main}>
       <div className={styles.description}>
@@ -41,54 +68,28 @@ export default function Home() {
 
       <div className={styles.grid}>
         <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           className={styles.card}
-          target="_blank"
+          onClick={showDrawer}
           rel="noopener noreferrer"
         >
           <h2>
-            Docs <span>-&gt;</span>
+            Scan QR Code <span>-&gt;</span>
           </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
+          <p>Scanned QRCode: {scannedCode}</p>
         </a>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+        <Drawer
+        title="Basic Drawer"
+        placement={placement}
+        closable={false}
+        onClose={()=>{onClose("")}}
+        open={open}
+        key={placement}
+        height={'100%'}
+        // closeIcon={true}
+      >
+        <Camera onclose={(code: string) => {onClose(code)}} show={open} />
+      </Drawer>
       </div>
     </main>
   )
