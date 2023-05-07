@@ -25,6 +25,17 @@ export default function Camera(props: {onclose: any, show: boolean}) {
         }
         
       };
+
+      let qrboxFunction = function(viewfinderWidth: number, viewfinderHeight: number) {
+        let minEdgePercentage = 0.7; // 70%
+        let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
+        let qrboxSize = Math.floor(minEdgeSize * minEdgePercentage);
+        return {
+            width: qrboxSize,
+            height: qrboxSize
+        };
+    }
+
   const initCamera = () => {
     
     if (props.show) {
@@ -38,10 +49,10 @@ export default function Camera(props: {onclose: any, show: boolean}) {
               // .. use this to start scanning.
               html5QrCode = new Html5Qrcode(/* element id */ "reader");
               html5QrCode.start(
-                cameraId, 
+                { facingMode: "environment" }, 
                 {
                   fps: 10,    // Optional, frame per seconds for qr code scanning
-                  qrbox: { width: 250, height: 250 }  // Optional, if you want bounded box UI
+                  qrbox: qrboxFunction  // Optional, if you want bounded box UI
                 },
                 (decodedText, decodedResult) => {
                   // do something when code is read
@@ -86,9 +97,11 @@ export default function Camera(props: {onclose: any, show: boolean}) {
 
   
   return (
-    <div className={styles.description} style={{}}>
+    <div style={{}}>
         <Button onClick={closeDialog}>Close</Button>
-        <div id="reader" style={{width: '100%', textAlign:'center'}}></div>
+        <div style={{width: '366px', height:'274px'}}>
+            <div id="reader" style={{width: '366px', height:'274px'}}></div>
+        </div>
     </div>
   )
 }
